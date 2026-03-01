@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>AbarTechz | AI & Data Solutions</title>
+  <link rel="icon" type="image/png" href="Images\Logo.png">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+
+  <nav>
+    <div class="logo">
+      <img src="Images\Logo.png" alt="AbarTechz Logo" class="logo-img">
+      <div>
+        <span class="logo-text">AbarTechz</span>
+        <span class="logo-tagline">Explore the Intelligence</span>
+      </div>
+    </div>
+  </nav>
+
+
+  <section class="hero">
+
+    <div class="hero-badge">
+      <span></span>
+      Accepting New Engagements
+    </div>
+
+    <h1> Building <em>AI & Data Solutions</em>
+      <br>
+      for your Business & Innovation
+    </h1>
+
+    <p>
+      The world is filled with Data, use it wiser to make your business grow.<br>
+      Automated Intelligence solutions from production grade AI systems.
+    </p>
+
+    <button class="btn-primary" id="openModal">
+      Let's Talk
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </button>
+
+
+    <div class="cards-section" id="cardsSection">
+
+      <div class="stat-card" data-index="0">
+        <div class="stat-number">18</div>
+        <div class="stat-label">Projects Delivered</div>
+      </div>
+
+      <div class="stat-card" data-index="1">
+        <div class="stat-number">73k</div>
+        <div class="stat-label">People Reached</div>
+      </div>
+
+      <div class="stat-card" data-index="2">
+        <div class="stat-number">7</div>
+        <div class="stat-label">Clients</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="modal">
+
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Schedule Your Call</div>
+          <div class="modal-sub">We'll confirm your booking within 24 hours.</div>
+        </div>
+        <button class="modal-close" id="closeModal">&#x2715;</button>
+      </div>
+
+      <form id="bookingForm" autocomplete="off">
+
+
+        <div class="form-section">
+          <div class="form-section-title">Basic Information</div>
+
+          <div class="form-row" style="margin-bottom: 14px;">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input class="form-input" type="text" placeholder="Your Name" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-input" type="email" placeholder="yourname@domain.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contact Number</label>
+            <div class="form-row phone">
+              <select class="form-select" id="countryCode">
+                <option value="+91">&#127470;&#127475; +91</option>
+                <option value="+1">&#127482;&#127480; +1</option>
+                <option value="+44">&#127468;&#127463; +44</option>
+                <option value="+61">&#127462;&#127482; +61</option>
+                <option value="+971">&#127462;&#127466; +971</option>
+                <option value="+65">&#127480;&#127468; +65</option>
+                <option value="+49">&#127465;&#127466; +49</option>
+                <option value="+33">&#127467;&#127479; +33</option>
+                <option value="+81">&#127471;&#127477; +81</option>
+                <option value="+86">&#127464;&#127475; +86</option>
+              </select>
+              <input class="form-input" type="tel" placeholder="" id="phoneInput" />
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-section">
+          <div class="form-section-title">Professional Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Company Name</label>
+              <input class="form-input" type="text" placeholder="Company Name" />
+            </div>
+            <div class="form-group">
+              <label>Your Role</label>
+              <input class="form-input" type="text" placeholder="Role" />
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-section">
+          <div class="form-section-title">Services Required</div>
+          <div class="services-grid" id="servicesGrid">
+            <div class="service-tag" data-service="Business Automations">Business Automations</div>
+            <div class="service-tag" data-service="Analytics Solutions">Analytics Solutions</div>
+            <div class="service-tag" data-service="Predictive Modelling">Predictive Modelling</div>
+            <div class="service-tag" data-service="Marketing & Leads Generation">Marketing &amp; Leads</div>
+            <div class="service-tag" data-service="Personalized AI for Business">Personalized AI</div>
+            <div class="service-tag" data-service="Others">Others</div>
+          </div>
+        </div>
+
+
+        <div class="form-section">
+          <div class="form-section-title">Booking</div>
+
+          <div class="booking-row">
+            <div class="form-group">
+              <label>Preferred Date</label>
+              <input class="form-input" type="date" id="dateInput" required />
+            </div>
+            <div class="form-group">
+              <label>Preferred Time (IST)</label>
+              <div class="time-label-wrap">
+                <input class="form-input" type="time" id="timeInput" required />
+                <span class="time-badge">IST</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label>Meeting Platform</label>
+            <select class="form-select" id="platformSelect" required>
+              <option value="" disabled selected>Select a platform</option>
+              <option value="Google Meet">Google Meet</option>
+              <option value="Zoom">Zoom</option>
+              <option value="WhatsApp Call">WhatsApp Call</option>
+              <option value="IMO">IMO</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Schedule Meeting</button>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="confirm-toast" id="confirmToast">
+    <div class="toast-icon">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M4 11l5 5 9-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="toast-title">Meeting Confirmed</div>
+    <div class="toast-body" id="toastBody"></div>
+    <div class="toast-progress" id="toastProgress"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init("FWmOFF6ncDylbEBV9");
+    })();
+  </script>
+</body>
+
+</html>
