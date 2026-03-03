@@ -1,160 +1,124 @@
-const cards = document.querySelectorAll('.stat-card');
-let current = 0;
-let isAnimating = false;
+const modalBackdrop = document.getElementById('modalBackdrop');
+const openModalBtn = document.getElementById('openModal');
+const closeModalBtn = document.getElementById('closeModal');
 
-function showCard(index) {
-  if (isAnimating) return;
-  isAnimating = true;
-  const currentCard = cards[current];
-  const nextCard = cards[index];
-  currentCard.classList.remove('entering');
-  currentCard.classList.add('leaving');
-
-  setTimeout(() => {
-    currentCard.classList.remove('leaving');
-    currentCard.style.opacity = '0';
-    currentCard.style.transform = 'translateY(30px) scale(0.95)';
-
-    nextCard.classList.add('entering');
-    current = index;
-
-    setTimeout(() => {
-      nextCard.classList.remove('entering');
-      nextCard.style.opacity = '1';
-      nextCard.style.transform = 'none';
-      isAnimating = false;
-    }, 600);
-  }, 500);
+if (openModalBtn && modalBackdrop) {
+    openModalBtn.addEventListener('click', () => {
+        modalBackdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    });
 }
 
-cards[0].classList.add('entering');
-setTimeout(() => {
-  cards[0].classList.remove('entering');
-  cards[0].style.opacity = '1';
-  cards[0].style.transform = 'none';
-}, 600);
-
-setInterval(() => {
-  const next = (current + 1) % cards.length;
-  showCard(next);
-}, 3000);
-
-const backdrop = document.getElementById('modalBackdrop');
-const openBtn = document.getElementById('openModal');
-const closeBtn = document.getElementById('closeModal');
-
-openBtn.addEventListener('click', () => {
-  backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
-});
-
-
-function closeModal() {
-  backdrop.classList.remove('open');
-  document.body.style.overflow = '';
+if (closeModalBtn && modalBackdrop) {
+    closeModalBtn.addEventListener('click', () => {
+        modalBackdrop.classList.remove('open');
+        document.body.style.overflow = '';
+    });
 }
-closeBtn.addEventListener('click', closeModal);
 
-backdrop.addEventListener('click', (e) => {
-  if (e.target === backdrop) closeModal();
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
+if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) {
+            modalBackdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    });
+}
 
 document.querySelectorAll('.service-tag').forEach(tag => {
-  tag.addEventListener('click', () => {
-    tag.classList.toggle('selected');
-  });
+    tag.addEventListener('click', () => {
+        tag.classList.toggle('selected');
+    });
 });
 
-const form = document.getElementById('bookingForm');
-const toast = document.getElementById('confirmToast');
+const bookingForm = document.getElementById('bookingForm');
+const confirmToast = document.getElementById('confirmToast');
 const toastBody = document.getElementById('toastBody');
 
-let toastTimeout;
+if (bookingForm) {
+    bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const date = document.getElementById('dateInput').value;
-  const time = document.getElementById('timeInput').value;
-  const platform = document.getElementById('platformSelect').value;
-  if (!date || !time || !platform) return;
-  const dateObj = new Date(date + 'T00:00:00');
-  const formattedDate = dateObj.toLocaleDateString('en-IN', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+        const submitBtn = bookingForm.querySelector('.btn-submit');
+        const originalText = submitBtn.innerText;
 
-  const [h, m] = time.split(':');
-  const hour = parseInt(h);
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const hour12 = hour % 12 || 12;
-  const formattedTime = `${hour12}:${m} ${ampm}`;
+        submitBtn.innerText = 'Sending...';
+        submitBtn.disabled = true;
+       
+        const selectedServices = Array.from(
+            document.querySelectorAll('.service-tag.selected')
+        )
+        .map(tag => tag.dataset.service)
+        .join(', ') || 'None selected';
+       
+        const rawDate = document.getElementById('dateInput').value;
+        const rawTime = document.getElementById('timeInput').value;
 
-  toastBody.innerHTML = `Your Meeting was scheduled on <strong>${formattedDate}</strong> at <strong>${formattedTime} (IST)</strong> through <strong>${platform}</strong>.`;
+        const dateObj = new Date(rawDate + 'T00:00:00');
+        const formattedDate = dateObj.toLocaleDateString('en-IN', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const [h, m] = rawTime.split(':');
+        const hour = parseInt(h);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        const formattedTime = `${hour12}:${m} ${ampm}`;
 
-  closeModal();
-  clearTimeout(toastTimeout);
-  const progress = document.getElementById('toastProgress');
-  progress.style.animation = 'none';
-  void progress.offsetWidth;
-  progress.style.animation = 'toastProgress 5s linear forwards';
-  toast.classList.add('show');
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => fullReset(), 450);
-  }, 5000);
-});
+        const templateParams = {
+            user_name: document.getElementById('fullName').value,
+            user_email: document.getElementById('email').value,
+            contact_number:
+                document.getElementById('countryCode').value + ' ' +
+                document.getElementById('phoneInput').value,
+            company_name:
+                document.getElementById('companyName').value || 'Not provided',
+            your_role:
+                document.getElementById('yourRole').value || 'Not provided',
+            services: selectedServices,
+            pref_date: formattedDate,
+            pref_time: formattedTime,
+            platform: document.getElementById('platformSelect').value,
+        };
 
-function fullReset() {
-  form.reset();
-  document.querySelectorAll('.service-tag').forEach(t => t.classList.remove('selected'));
-  const platformEl = document.getElementById('platformSelect');
-  platformEl.selectedIndex = 0;
-  document.getElementById('dateInput').value = '';
-  document.getElementById('timeInput').value = '';
-  backdrop.classList.remove('open');
-  document.body.style.overflow = '';
+        const serviceID = 'Book-a-meeting'; 
+        const templateID = 'template_6kljic5';
+
+        emailjs.send(serviceID, templateID, templateParams)
+            .then(() => {
+             
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                
+                modalBackdrop.classList.remove('open');
+                document.body.style.overflow = '';
+                
+                bookingForm.reset();
+                document.querySelectorAll('.service-tag.selected')
+                    .forEach(tag => tag.classList.remove('selected'));
+                
+                toastBody.innerHTML = `
+                    Your meeting has been scheduled for 
+                    <strong>${formattedDate}</strong> at 
+                    <strong>${formattedTime} (IST)</strong>.
+                `;
+                confirmToast.classList.add('show');
+
+                setTimeout(() => {
+                    confirmToast.classList.remove('show');
+                }, 5000);
+            })
+            .catch((error) => {
+                console.error('EmailJS Error:', error);
+
+                submitBtn.innerText = 'Failed';
+                setTimeout(() => {
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+    });
 }
-
-const today = new Date().toISOString().split('T')[0];
-document.getElementById('dateInput').min = today;
-
-const fullName = document.querySelector('input[type="text"]').value;
-const email = document.querySelector('input[type="email"]').value;
-const countryCode = document.getElementById('countryCode').value;
-const phone = document.getElementById('phoneInput').value;
-const company = document.querySelectorAll('input[type="text"]')[1].value;
-const role = document.querySelectorAll('input[type="text"]')[2].value;
-
-
-let selectedServices = [];
-document.querySelectorAll('.service-tag.selected').forEach(tag => {
-  selectedServices.push(tag.dataset.service);
-});
-
-const templateParams = {
-  full_name: fullName,
-  email: email,
-  country_code: countryCode,
-  phone: phone,
-  company: company,
-  role: role,
-  services: selectedServices.join(', '),
-  date: formattedDate,
-  time: formattedTime,
-  platform: platform
-};
-
-emailjs.send("service_kswavk8", "template_rrtrbxx", templateParams)
-  .then(function (response) {
-    console.log("SUCCESS!", response.status, response.text);
-  }, function (error) {
-    console.log("FAILED...", error);
-  });
-
-
